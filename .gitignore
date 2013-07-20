@@ -2,3 +2,9 @@
 *.pot
 *.pyc
 local_settings.py
+/media
+.idea
+.idea/*
+.DS_Store
+._.DS_Store
+*.sql
