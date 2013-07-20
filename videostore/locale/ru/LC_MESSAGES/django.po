@@ -1,0 +1,184 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-20 20:11+0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ticketing/models.py:8
+msgid "Pending view"
+msgstr "Ожидает промотра"
+
+#: ticketing/models.py:9
+msgid "Seen"
+msgstr "Просмотрен"
+
+#: ticketing/models.py:10
+msgid "Overdue"
+msgstr "Просрочен"
+
+#: ticketing/models.py:11
+msgid "Blocked"
+msgstr "Заблокирован администратором"
+
+#: ticketing/models.py:19 videostore/models.py:161
+msgid "Video"
+msgstr "Видео"
+
+#: ticketing/models.py:29 ticketing/models.py:34 videostore/models.py:119
+msgid "Created time"
+msgstr "Время создания"
+
+#: ticketing/models.py:39
+msgid "Valid to"
+msgstr "Доступен до"
+
+#: ticketing/models.py:50
+msgid "Dump of viewer HTTP headers"
+msgstr ""
+
+#: ticketing/models.py:58
+msgid "Ticket"
+msgstr "Билет"
+
+#: ticketing/models.py:59
+msgid "Tickets"
+msgstr "Билеты"
+
+#: videostore/models.py:9
+msgid "Extension"
+msgstr "Расширению"
+
+#: videostore/models.py:10
+msgid "Meta info"
+msgstr "Мета-информации"
+
+#: videostore/models.py:11
+msgid "File name"
+msgstr "Имени файла"
+
+#: videostore/models.py:20
+msgid "Match by"
+msgstr "Искать по"
+
+#: videostore/models.py:22
+msgid ""
+"Video param to detected from if this command should be used to convert given "
+"video"
+msgstr "По какому параметру в видео опредять, что данная команда подходит для конвертации"
+
+#: videostore/models.py:26
+msgid "RegExp to match video file"
+msgstr "Регулярное выражение"
+
+#: videostore/models.py:29
+msgid "Enabled?"
+msgstr "Доступна?"
+
+#: videostore/models.py:33
+msgid "System command to convert video"
+msgstr "Команда для конвертации видео"
+
+#: videostore/models.py:37
+msgid "Order"
+msgstr "Место по порядку"
+
+#: videostore/models.py:38
+msgid ""
+"If more than one command matched to convert given video - topmost by Order "
+"will be used"
+msgstr "Если для конвертации подходит несколько команд, то будет выбрана та, что выше по порядку"
+
+#: videostore/models.py:52
+msgid "Video convert command"
+msgstr "Команда для конвертации"
+
+#: videostore/models.py:53
+msgid "Video convert commands"
+msgstr "Команды для конвертации"
+
+#: videostore/models.py:61
+msgid "Parent category"
+msgstr "Родительская категория"
+
+#: videostore/models.py:67 videostore/models.py:100
+msgid "Title"
+msgstr "Название"
+
+#: videostore/models.py:77
+msgid "Category"
+msgstr "Категория"
+
+#: videostore/models.py:78 videostore/models.py:95
+msgid "Categories"
+msgstr "Категории"
+
+#: videostore/models.py:82
+msgid "Pending convert"
+msgstr "Ожидает конвертации"
+
+#: videostore/models.py:83
+msgid "Convert started"
+msgstr "Конвертация начата"
+
+#: videostore/models.py:84
+msgid "Converted"
+msgstr "Готово"
+
+#: videostore/models.py:85
+msgid "Not converted due to error"
+msgstr "Не удалось сконвертировать"
+
+#: videostore/models.py:104
+msgid "Video file"
+msgstr "Видео"
+
+#: videostore/models.py:109
+msgid "Thumbnail image"
+msgstr "Изображение (тумба)"
+
+#: videostore/models.py:114
+msgid "Description"
+msgstr "Описание"
+
+#: videostore/models.py:125
+msgid "Video conversion status"
+msgstr "Статус конвертации видео"
+
+#: videostore/models.py:131
+msgid "Convert time"
+msgstr "Время конвертации"
+
+#: videostore/models.py:136
+msgid "Message from last converting command"
+msgstr "Сообщение от команды конвертации"
+
+#: videostore/models.py:142
+msgid "Uploaded by"
+msgstr "Кем загружено"
+
+#: videostore/models.py:147
+msgid "Video enabled for view?"
+msgstr "Доступно для просмотра?"
+
+#: videostore/models.py:152
+msgid "Meta info about original video"
+msgstr "Мета-информация"
+
+#: videostore/models.py:162
+msgid "Videos"
+msgstr "Видео"

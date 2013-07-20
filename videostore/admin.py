@@ -11,6 +11,7 @@ admin.site.register(Category, CategoryAdmin)
 
 
 class VideoAdmin(admin.ModelAdmin):
+    filter_horizontal = ('categories',)
     def save_model(self, request, obj, form, change):
         if 'video' in form.changed_data and change:
             obj.status = 'pending'
