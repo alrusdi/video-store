@@ -49,7 +49,7 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = False
 
-ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
+ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
@@ -125,8 +125,21 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    "south",
+    'mptt',
+    "videostore",
+    "ticketing",
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.request',
+    'django.core.context_processors.static',
+    'django.contrib.messages.context_processors.messages',
 )
 
 # A sample logging configuration. The only tangible logging
