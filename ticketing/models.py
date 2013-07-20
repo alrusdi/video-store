@@ -43,6 +43,7 @@ class Ticket(models.Model):
     status = models.CharField(
         max_length=50,
         choices=TICKET_STATUS_CHOICES,
+        verbose_name=_('Status'),
         default='pending',
     )
 
