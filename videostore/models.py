@@ -154,6 +154,9 @@ class Video(models.Model):
         editable=False,
     )
 
+    def get_absolute_url(self):
+        return '/stream/c3f6aa2efc7059cfa286a32b37a77572'
+
     def __unicode__(self):
         return self.title
 

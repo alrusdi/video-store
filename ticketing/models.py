@@ -12,6 +12,28 @@ TICKET_STATUS_CHOICES = (
 )
 
 
+class Server(models.Model):
+    title = models.CharField(
+        max_length=50,
+        verbose_name=_('Title')
+    )
+    ip_address = models.CharField(
+        max_length=50,
+        verbose_name=_('IP address')
+    )
+    is_enabled = models.BooleanField(
+        verbose_name=_('Enabled?'),
+        default=True,
+    )
+
+    def __unicode__(self):
+        return u'%s on %s' % (self.title, self.ip_address)
+
+    class Meta:
+        verbose_name = _(u'Server')
+        verbose_name_plural = _(u'Servers')
+
+
 class Ticket(models.Model):
 
     video = models.ForeignKey(
@@ -49,7 +71,8 @@ class Ticket(models.Model):
 
     headers = models.TextField(
         verbose_name=_('Dump of viewer HTTP headers'),
-        editable=False
+        editable=False,
+        null=True,
     )
 
     def __unicode__(self):
