@@ -8,7 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^video/(?P<ticket>[0-9a-f]+)/$', ViewVideoByTicket.as_view(), name='video_by_ticket'),
     url(r'^stream/(?P<ticket>[0-9a-f]+)/$', stream_video, name='video_stream'),
-    url(r'^get_ticket/(?P<video_id>[0-9a-f]+)/$', GetTicket.as_view(), name='get_ticket'),
+    url(r'^get_ticket/(?P<video_id>[0-9]+)/$', GetTicket.as_view(), name='get_ticket'),
 
     url(r'^', include(admin.site.urls)),
 )

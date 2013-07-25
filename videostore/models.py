@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from mptt.models import MPTTModel, TreeForeignKey, TreeManyToManyField
+from uuid import uuid4
 
+def path_and_rename(path):
+    def wrapper(instance, filename):
+        ext = filename.split('.')[-1][-5:]
+        filename = '%s.%s' % (uuid4().hex, ext)
+        return os.path.join(path, filename)
+    return wrapper
 
 CONVERTING_COMMAND_MATCH_CHOICES = (
-    ('extention', _('Extension')),
-    ('meta', _('Meta info')),
+    ('extension', _('Extension')),
+    #('meta', _('Meta info')),
     ('name', _('File name')),
 )
 
@@ -19,6 +27,7 @@ class ConvertingCommand(models.Model):
         max_length=50,
         verbose_name=_('Match by'),
         choices=CONVERTING_COMMAND_MATCH_CHOICES,
+        default='extension',
         help_text=_('Video param to detected from if this command should be used to convert given video'),
     )
     match_regex = models.CharField(
@@ -31,7 +40,7 @@ class ConvertingCommand(models.Model):
     )
     command = models.TextField(
         verbose_name=_('System command to convert video'),
-        help_text = 'Example: /usr/bin/avconv -y -i %(input_file)s -acodec libmp3lame -ar 44100 -f flv %(output_file)s',
+        help_text = 'Example: /usr/bin/avconv -nostats -y -i %(input_file)s -acodec libmp3lame -ar 44100 -f flv %(output_file)s',
     )
     sort_pos = models.PositiveIntegerField(
         verbose_name=_('Order'),
@@ -102,12 +111,12 @@ class Video(models.Model):
 
     video = models.FileField(
         verbose_name=_('Video file'),
-        upload_to='videos',
+        upload_to=path_and_rename('videos'),
     )
 
     thumb = models.ImageField(
         verbose_name=_('Thumbnail image'),
-        upload_to='thumbs',
+        upload_to=path_and_rename('thumbs'),
     )
 
     description = models.TextField(
@@ -134,7 +143,6 @@ class Video(models.Model):
 
     last_convert_msg = models.TextField(
         verbose_name=_('Message from last converting command'),
-        editable=False,
     )
 
     user = models.ForeignKey(
@@ -153,6 +161,24 @@ class Video(models.Model):
         null=True,
         editable=False,
     )
+
+    @property
+    def orig_filename(self):
+        return str(self.video.file).split('/')[-1]
+
+    @property
+    def filename(self):
+        return self.converted_path.split('/')[-1]
+
+    @property
+    def converted_path(self):
+        path = str(self.video.file)
+        fname = self.orig_filename
+        return os.path.join(
+            '/'.join(path.split('/')[0:-1]),
+            'converted',
+            '.'.join(fname.split('.')[0:-1]) + '.flv'
+        )
 
     def get_absolute_url(self):
         return '/stream/c3f6aa2efc7059cfa286a32b37a77572'

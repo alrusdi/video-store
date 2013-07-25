@@ -22,11 +22,12 @@ class AdminVideoWidget(AdminFileWidget):
             if value.instance.convert_status == 'converted':
                 html += u'''
                     <a target="_blank" href="/video/%s/">Просмотр в новой вкладке</a><br />
-                    Код вставки:<textarea style="width: 527px;" rows=1>&lt;iframe width="540" height="480" src="http://188.225.36.91/video/%s/"&gt;&lt;/iframe&gt;</textarea><br />
-                    %s
-                ''' % (value.instance.pk, value.instance.pk, parts[1])
-            html = mark_safe(html)
+                    Код вставки:<textarea style="width: 527px;" rows=1>&lt;iframe width="540" height="480" src="http://188.225.36.91/video/{TICKET_CODE}/"&gt;&lt;/iframe&gt;</textarea><br />
+                ''' % value.instance.pk
+            else:
+                html += u'Видео %s еще не сконвертировано и пока его можно только заменить<br />' % value
 
+            html = mark_safe(html+parts[1])
         return html
 
 class VideoAdminForm(ModelForm):
@@ -39,11 +40,12 @@ class VideoAdminForm(ModelForm):
 
 class VideoAdmin(admin.ModelAdmin):
     filter_horizontal = ('categories',)
-    readonly_fields = ('convert_status',)
+    readonly_fields = ('convert_status','last_convert_msg')
     form = VideoAdminForm
     def save_model(self, request, obj, form, change):
+        print form.changed_data
         if 'video' in form.changed_data and change:
-            obj.status = 'pending'
+            obj.convert_status = 'pending'
 
         if not change:
             obj.user = request.user

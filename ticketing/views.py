@@ -19,7 +19,6 @@ def get_client_ip(request):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
-    print ip
     return ip
 
 
@@ -67,7 +66,7 @@ class ViewVideoByTicket(TemplateView):
             video = get_object_or_404(Video, pk=hash_or_id)
         else:
             ticket = get_object_or_404(Ticket, hash=hash_or_id)
-            if ticket.status == 'pending':
+            if ticket.status != 'pending':
                 raise Http404
 
         return {'ticket': hash_or_id}
@@ -85,9 +84,8 @@ def stream_video(request, ticket):
     else:
         video = get_object_or_404(Video, pk=ticket)
 
-    pk = video.pk
     response = HttpResponse(content_type='video/x-flv')
-    response["Content-Disposition"] = "attachment; filename=video%s" % pk
-    response['X-Accel-Redirect'] = "/protected/%s.flv" % pk
+    response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
+    response['X-Accel-Redirect'] = "/protected/%s" % video.filename
     return response
 
