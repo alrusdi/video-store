@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.forms import ModelForm
 from django.contrib.admin.widgets import AdminFileWidget
+from django.db import models
 from django.contrib import admin
+from django.forms import CheckboxSelectMultiple
 from  django.utils.safestring import mark_safe
 from mptt.admin import MPTTModelAdmin
 
@@ -35,15 +37,14 @@ class VideoAdminForm(ModelForm):
         model = Video
         widgets = {
             'video': AdminVideoWidget,
+            'categories': CheckboxSelectMultiple
         }
 
 
 class VideoAdmin(admin.ModelAdmin):
-    filter_horizontal = ('categories',)
     readonly_fields = ('convert_status','last_convert_msg')
     form = VideoAdminForm
     def save_model(self, request, obj, form, change):
-        print form.changed_data
         if 'video' in form.changed_data and change:
             obj.convert_status = 'pending'
 

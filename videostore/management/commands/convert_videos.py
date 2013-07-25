@@ -27,7 +27,6 @@ class Command(BaseCommand):
         video.save()
 
 
-        file_path = '/'.join(str(video.video.file).split('/')[0:-1])
         full_name = str(video.video.file).split('/')[-1]
         parts = full_name.split('.')
 
@@ -39,6 +38,9 @@ class Command(BaseCommand):
         cmds = ConvertingCommand.objects.filter(is_enabled=True).order_by('sort_pos')
         cmd = None
         for c in cmds:
+            data = video_info.get(c.match_by)
+            if not data:
+                continue
             if re.match(c.match_regex, video_info.get(c.match_by)):
                 cmd = c
                 break
