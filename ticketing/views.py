@@ -84,8 +84,27 @@ def stream_video(request, ticket):
     else:
         video = get_object_or_404(Video, pk=ticket)
 
-    response = HttpResponse(content_type='video/x-flv')
+    response = HttpResponse(content_type='video/mp4')
+    start = '?start=%s' % request.GET.get('start') if request.GET.get('start') else '?v=1'
     response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
-    response['X-Accel-Redirect'] = "/protected/%s" % video.filename
+    response['X-Accel-Redirect'] = "/tst/14f8e883725f46339244a3822c3176a7.mp4%s" % start
+#    response['X-Accel-Redirect'] = "/protected/%s%s" % (video.filename, start)
     return response
 
+def stream_mp4(request, ticket):
+    if not request.user.is_authenticated():
+        ticket = get_object_or_404(Ticket, hash=ticket)
+        if not ticket.status == 'pending':
+            raise Http404
+        ticket.status = 'seen'
+        ticket.seen_at = datetime.datetime.now()
+        ticket.save()
+        video = ticket.video
+    else:
+        video = get_object_or_404(Video, pk=ticket)
+
+    response = HttpResponse(content_type='video/mp4')
+    start = '?start=%s' % request.GET.get('start') if request.GET.get('start') else '?v=1'
+    response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
+    response['X-Accel-Redirect'] = "/tst/14f8e883725f46339244a3822c3176a7.mp4"
+    return response

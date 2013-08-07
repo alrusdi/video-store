@@ -7,25 +7,54 @@
 
     <!-- site specific styling -->
     <style type="text/css">
-        body {text-align: center; padding: 0; margin: 0; }
+        body {position: absolute; width: 100%; height: 100%; padding: 0; margin: 0; }
         .flowplayer { width: 100%; height: 100%; }
     </style>
+
+    <script type="text/javascript" src="/static/flash_detect_min.js"></script>
 
     <!-- flowplayer depends on jQuery 1.7.1+ (for now) -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 
     <!-- include flowplayer -->
-    <script type="text/javascript" src="/static/flowplayer/flowplayer.min.js"></script>
+    <script type="text/javascript" src="http://releases.flowplayer.org/js/flowplayer-3.2.12.min.js"></script>
 
 </head>
 
 <body>
 
-<!-- the player -->
-<div class="flowplayer" data-swf="/static/flowplayer/flowplayer.swf">
-    <video>
-        <source type="video/flv" src="/stream/{{ ticket }}/">
-    </video>
+<div id="player" style="position: relative;margin:0 auto;width: 100%;height: 100%;">
 </div>
+<script>
+{% autoescape off %}
+$(document).ready(function() {
+if(FlashDetect.installed){
+
+flowplayer("player", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {
+    // this will enable pseudostreaming support
+    plugins: {
+        pseudo: {
+            url: "http://releases.flowplayer.org/swf/flowplayer.pseudostreaming-3.2.12.swf"
+        }
+    },
+ 
+    // clip properties
+    clip: {
+        url: "/stream/{{ ticket }}/",
+ 
+        // make this clip use pseudostreaming plugin with "provider" property
+        provider: 'pseudo',
+ 
+        // all videos under this baseUrl support pseudostreaming on the server side
+        //baseUrl: '/tst'
+    }
+ 
+});
+} else {
+    $('#player').html("<video src='/streammp4/{{ ticket }}/' autobuffer='true' controls='true'></video>");
+}
+});
+{% endautoescape %}
+</script>
 
 </body>
