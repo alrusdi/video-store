@@ -24,6 +24,7 @@
 <body>
 
 <div id="player" style="position: relative;margin:0 auto;width: 100%;height: 100%;">
+<img style="width: 100%; height: 100%;" src="{{ video.thumb.url }}" alt="Play this video" />
 </div>
 <script>
 {% autoescape off %}
@@ -35,7 +36,15 @@ flowplayer("player", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf",
     plugins: {
         pseudo: {
             url: "http://releases.flowplayer.org/swf/flowplayer.pseudostreaming-3.2.12.swf"
-        }
+        },
+	content: {
+	   backgroundGradient:'none'
+	}
+    },
+
+    canvas: {
+	background: "url({{ video.thumb.url }})",
+	backgroundGradient: 'none'
     },
  
     // clip properties
@@ -44,14 +53,14 @@ flowplayer("player", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf",
  
         // make this clip use pseudostreaming plugin with "provider" property
         provider: 'pseudo',
- 
+	//autoPlay: false
         // all videos under this baseUrl support pseudostreaming on the server side
         //baseUrl: '/tst'
     }
  
 });
 } else {
-    $('#player').html("<video style='margin:0 auto;width: 100%;height: 100%;' src='/streammp4/{{ ticket }}/' autobuffer='true' controls='true'></video>");
+    $('#player').html("<video style='margin:0 auto;width: 100%;height: 100%;' src='/streammp4/{{ ticket }}/' poster='{{ video.thumb.url }}' controls='true'></video>");
 }
 });
 {% endautoescape %}
