@@ -21,6 +21,20 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+class GetVideos(JsonView):
+    def preprocess(self):
+        srv = list(Server.objects.filter(
+            is_enabled=True,
+            ip_address=get_client_ip(self.request)
+        ))
+        if not srv:
+            return {'error': 'Invalid server'}
+        videos = Video.objects.filter(convert_status='converted')
+        ret = []
+        for v in videos:
+            ret.append({'id': v.pk, 'title': v.title})
+        return ret
+
 
 class GetTicket(JsonView):
 
@@ -68,8 +82,9 @@ class ViewVideoByTicket(TemplateView):
             ticket = get_object_or_404(Ticket, hash=hash_or_id)
             if ticket.status != 'pending':
                 raise Http404
+            video = ticket.video
 
-        return {'ticket': hash_or_id}
+        return {'ticket': hash_or_id, "video": video}
 
 
 def stream_video(request, ticket):
