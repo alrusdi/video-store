@@ -51,7 +51,7 @@ flowplayer("player", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf",
  
 });
 } else {
-    $('#player').html("<video src='/streammp4/{{ ticket }}/' autobuffer='true' controls='true'></video>");
+    $('#player').html("<video style='margin:0 auto;width: 100%;height: 100%;' src='/streammp4/{{ ticket }}/' autobuffer='true' controls='true'></video>");
 }
 });
 {% endautoescape %}

@@ -177,7 +177,7 @@ class Video(models.Model):
         return os.path.join(
             '/'.join(path.split('/')[0:-1]),
             'converted',
-            '.'.join(fname.split('.')[0:-1]) + '.flv'
+            '.'.join(fname.split('.')[0:-1]) + '.mp4'
         )
 
     def get_absolute_url(self):
