@@ -69,6 +69,11 @@ class Ticket(models.Model):
         default='pending',
     )
 
+    client_id = models.CharField(
+        max_length=50,
+        verbose_name=_('Client id'),
+    )
+
     headers = models.TextField(
         verbose_name=_('Dump of viewer HTTP headers'),
         editable=False,

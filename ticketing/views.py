@@ -57,7 +57,8 @@ class GetTicket(JsonView):
         hash = md5('%s%s' % (time.time(), settings.SECRET_KEY)).hexdigest()
         ticket = Ticket(
             video=v,
-            hash=hash
+            hash=hash,
+            client_id = get_client_ip(self.request)
         )
         ticket.save()
 
@@ -86,42 +87,44 @@ class ViewVideoByTicket(TemplateView):
 
         return {'ticket': hash_or_id, "video": video}
 
+def __ticket_valid(request, ticket):
+    now = datetime.datetime.now()
+    if ticket.status not in ['pending', 'seen']:
+        return False
+
+    if ticket.client_id != get_client_ip(request):
+        return False
+
+    if (now-ticket.seen_at).total_seconds()>60*60:
+        return False
+
+    return True
+
+def __base_stream(request, ticket, type):
+    if not request.user.is_authenticated():
+        ticket = get_object_or_404(Ticket, hash=ticket)
+
+        if not __ticket_valid(request, ticket):
+            raise Http404
+
+        if ticket.status == 'pending':
+            ticket.status = 'seen'
+            ticket.seen_at = datetime.datetime.now()
+            ticket.save()
+        video = ticket.video
+    else:
+        video = get_object_or_404(Video, pk=ticket)
+
+    response = HttpResponse(content_type='video/mp4')
+    start = '?start=%s' % request.GET.get('start') if request.GET.get('start') else '?v=1'
+    response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
+    response['X-Accel-Redirect'] = "/%s/%s%s" % (type, video.filename, start)
+    return response
 
 def stream_video(request, ticket):
-    if not request.user.is_authenticated():
-        ticket = get_object_or_404(Ticket, hash=ticket)
-        if not ticket.status == 'pending':
-            raise Http404
-        ticket.status = 'seen'
-        ticket.seen_at = datetime.datetime.now()
-        ticket.save()
-        video = ticket.video
-    else:
-        video = get_object_or_404(Video, pk=ticket)
+    return __base_stream(request, ticket, 'protected')
 
-    response = HttpResponse(content_type='video/mp4')
-    start = '?start=%s' % request.GET.get('start') if request.GET.get('start') else '?v=1'
-    response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
-#    response['X-Accel-Redirect'] = "/tst/14f8e883725f46339244a3822c3176a7.mp4%s" % start
-    response['X-Accel-Redirect'] = "/protected/%s%s" % (video.filename, start)
-    return response
 
 def stream_mp4(request, ticket):
-    if not request.user.is_authenticated():
-        ticket = get_object_or_404(Ticket, hash=ticket)
-        now = datetime.datetime.now()
-        if not ticket.status == 'pending' and (now-ticket.seen_at).total_seconds()>10:
-            raise Http404
-        ticket.status = 'seen'
-        ticket.seen_at = datetime.datetime.now()
-        ticket.save()
-        video = ticket.video
-    else:
-        video = get_object_or_404(Video, pk=ticket)
+    return __base_stream(request, ticket, 'converted')
 
-    response = HttpResponse(content_type='video/mp4')
-    start = '?start=%s' % request.GET.get('start') if request.GET.get('start') else '?v=1'
-    response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
-    response['X-Accel-Redirect'] = "/converted/%s%s" % (video.filename, start)
-#    response['X-Accel-Redirect'] = "/tst/14f8e883725f46339244a3822c3176a7.mp4"
-    return response

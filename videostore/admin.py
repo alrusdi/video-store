@@ -42,6 +42,7 @@ class VideoAdminForm(ModelForm):
 
 
 class VideoAdmin(admin.ModelAdmin):
+    list_display = ('title', 'id', 'convert_status', 'is_enabled')
     readonly_fields = ('convert_status','last_convert_msg')
     form = VideoAdminForm
     def save_model(self, request, obj, form, change):
