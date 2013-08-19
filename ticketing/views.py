@@ -89,7 +89,8 @@ class ViewVideoByTicket(TemplateView):
 
 def __ticket_valid(request, ticket):
     now = datetime.datetime.now()
-    if ticket.status not in ['pending', 'seen']:
+
+    if ticket.status != 'seen':
         return False
 
     if ticket.client_id != get_client_ip(request):
@@ -100,17 +101,17 @@ def __ticket_valid(request, ticket):
 
     return True
 
-def __base_stream(request, ticket, type):
+def __base_stream(request, ticket, internal_stream_path):
     if not request.user.is_authenticated():
         ticket = get_object_or_404(Ticket, hash=ticket)
 
-        if not __ticket_valid(request, ticket):
-            raise Http404
-
         if ticket.status == 'pending':
             ticket.status = 'seen'
+            ticket.client_id = get_client_ip(request)
             ticket.seen_at = datetime.datetime.now()
             ticket.save()
+        elif not __ticket_valid(request, ticket):
+            raise Http404
         video = ticket.video
     else:
         video = get_object_or_404(Video, pk=ticket)
@@ -118,7 +119,7 @@ def __base_stream(request, ticket, type):
     response = HttpResponse(content_type='video/mp4')
     start = '?start=%s' % request.GET.get('start') if request.GET.get('start') else '?v=1'
     response["Content-Disposition"] = "attachment; filename=video_%s.flv" % video.pk
-    response['X-Accel-Redirect'] = "/%s/%s%s" % (type, video.filename, start)
+    response['X-Accel-Redirect'] = "/%s/%s%s" % (internal_stream_path, video.filename, start)
     return response
 
 def stream_video(request, ticket):
