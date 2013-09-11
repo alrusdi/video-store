@@ -24,10 +24,8 @@ def watermark(request, file):
         layer.paste(mark, position)
 
         Image.composite(layer, im, layer).save(res_path)
-
-    response = HttpResponse()
-    response['X-Sendfile'] = res_path
-    response['Content-Type'] = ''
-
+    ext = fname.split('.')[-1].lower()
+    response = HttpResponse(open(res_path, 'r'), mimetype='image/%s' % ext)
+    
     return response
 
